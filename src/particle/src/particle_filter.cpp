@@ -199,11 +199,27 @@ void ParticleFilter::updateWeights(double std_landmark[],
 }
 
 /*
-* TODO
 * This function resamples the set of particles by repopulating the particles using the weight as metric
 */
 void ParticleFilter::resample() {
-    
+    // TODO add more method for resampling
+    resamplingWheel();  
+}
+
+/**
+ * @brief Performs resampling of particles using a resampling wheel algorithm.
+ *
+ * This function implements a resampling wheel algorithm to update the set of particles
+ * based on their weights. It ensures that particles with higher weights have a higher
+ * likelihood of being selected, while avoiding degeneracy.
+ *
+ * @note The function assumes that the global variables num_particles, gen, and particles
+ * are properly initialized before calling.
+ *
+ * @warning The function directly modifies the global vector of particles. After calling
+ * this function, the particles vector is updated with the resampled set.
+ */
+void resamplingWheel() {
     uniform_int_distribution<int> dist_distribution(0,num_particles-1);
     double beta  = 0.0;
     vector<double> weights;
@@ -216,7 +232,17 @@ void ParticleFilter::resample() {
     float max_w = *max_element(weights.begin(), weights.end());
     uniform_real_distribution<double> uni_dist(0.0, max_w);
 
-    //TODO write here the resampling technique (feel free to use the above variables)
+    // write here the resampling technique (feel free to use the above variables)
+    // Resampling wheel
+    for(int i=0;i<num_particles;i++) {
+        beta = beta + index * 2 * max_w;
+        while(weights[index]<beta) {
+            beta = beta - weights[index];
+            index = (index + 1) % num_particles;
+        }
+        new_particles.push_back(particles[index]);
+    }
+
+    // Update the global particles vector with the resampled set
+    particles = new_particles;
 }
-
-
