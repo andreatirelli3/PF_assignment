@@ -20,7 +20,6 @@ static  default_random_engine gen;
 *  nParticles - number of particles
 */
 void ParticleFilter::init_random(double std[],int nParticles) {
-
 }
 
 // This function initialize the particles using an initial guess
@@ -44,7 +43,6 @@ void ParticleFilter::init(double x, double y, double theta, double std[],int nPa
 }
 
 /*
-* TODO
 * The predict phase uses the state estimate from the previous timestep to produce an estimate of the state at the current timestep
 * Input:
 *  delta_t  - time elapsed beetween measurements
@@ -56,19 +54,25 @@ void ParticleFilter::init(double x, double y, double theta, double std[],int nPa
 */
 void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate) {
     //for each particle
+    for(auto &particle : particles) {
         double x,y,theta;
         if (fabs(yaw_rate) < 0.00001) {
-            //TODO
+            x = particle.x + velocity + cos(particle.theta);
+            y = particle.y + velocity + sin(particle.theta);
+            theta = particle.theta
         }else{ 
-            //TODO
-
+            x = particle.x + (velocity / particle.theta) * (sin(particle.theta + velocity) - sin(particle.theta));
+            y = particle.y + (velocity / yaw_rate) * (cos(particle.theta) - cos(particle.theta + velocity));
+            theta = particle.theta + velocity;
         }   
         normal_distribution<double> dist_x(0, std_pos[0]); //the random noise cannot be negative in this case
         normal_distribution<double> dist_y(0, std_pos[1]);
         normal_distribution<double> dist_theta(0, std_pos[2]);
-        //TODO: add the computed noise to the current particles position (x,y,theta)
-
-	//}
+        // add the computed noise to the current particles position (x,y,theta)
+        particle.x = x + dist_x;
+        particle.y = y + dist_y;
+        particle.theta = theta + dist_theta;
+    }
 }
 
 /*
@@ -99,8 +103,8 @@ LandmarkObs transformation(LandmarkObs observation, Particle p){
     LandmarkObs global;
     
     global.id = observation.id;
-    global.x = -1; //TODO
-    global.y = -1; //TODO
+    global.x = observation.x * cos(p.theta) - observation.y * sin(p.theta) + p.x;
+    global.y = observation.y * cos(p.theta) - observation.x * sin(p.theta) + p.y;
 
     return global;
 }
@@ -128,8 +132,12 @@ void ParticleFilter::updateWeights(double std_landmark[],
         // Before applying the association we have to transform the observations in the global coordinates
         std::vector<LandmarkObs> transformed_observations;
         //TODO: for each observation transform it (transformation function)
+        for(int j=0;j<observations.size;j++) {
+            transformed_observations[j] = transformation(observations[j], particles[i]);
+        }
         
         //TODO: perform the data association (associate the landmarks to the observations)
+        dataAssociation(mapLandmark, observations);
         
         particles[i].weight = 1.0;
         // Compute the probability
