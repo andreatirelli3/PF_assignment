@@ -75,8 +75,31 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
     }
 }
 
+/**
+ * @brief Calculates the Euclidean distance between two 2D points.
+ *
+ * This function computes the Euclidean distance between two points in a 2D space.
+ * The Euclidean distance is the straight-line distance between the points.
+ *
+ * @param observation The first point with coordinates (observation.x, observation.y).
+ * @param map The second point with coordinates (map.x, map.y).
+ * @return The Euclidean distance between the two points.
+ */
+double euclideanDistance(LandmarkObs observation, LandmarkObs map) {
+    // Calculate the difference in x and y coordinates
+    double x_diff = map.x - observation.x;
+    double y_diff = map.y - observation.y;
+
+    // Calculate the squared distance
+    double squared_distance = x_diff * x_diff + y_diff * y_diff;
+
+    // Calculate the actual Euclidean distance by taking the square root
+    double distance = sqrt(squared_distance);
+
+    return distance;
+}
+
 /*
-* TODO
 * This function associates the landmarks from the MAP to the landmarks from the OBSERVATIONS
 * Input:
 *  mapLandmark   - landmarks of the map
@@ -85,13 +108,26 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 *  Associated observations to mapLandmarks (perform the association using the ids)
 */
 void ParticleFilter::dataAssociation(std::vector<LandmarkObs> mapLandmark, std::vector<LandmarkObs>& observations) {
-   //TODO
    //TIP: Assign to observations[i].id the id of the landmark with the smallest euclidean distance
+    for(size_t i=0;i<observations.size(),i++) {
+        int closet_point_id = -1;
+        double min_dist = std::numeric_limits<double>::max();
 
+        for(size_t j=0;j<mapLandmark.size(),j++) {
+            double distance = euclideanDistance(observations[i], mapLandmark[j]);
+
+            if (distance < min_dist) {
+                closet_point_id = j;
+                min_dist = distance;
+            }
+        }
+
+        // Associate the closest landmark to the observation
+        observations[i].id = closet_point_id;
+    }
 }
 
 /*
-* TODO
 * This function transform a local (vehicle) observation into a global (map) coordinates
 * Input:
 *  observation   - A single landmark observation
@@ -131,12 +167,12 @@ void ParticleFilter::updateWeights(double std_landmark[],
 
         // Before applying the association we have to transform the observations in the global coordinates
         std::vector<LandmarkObs> transformed_observations;
-        //TODO: for each observation transform it (transformation function)
+        // for each observation transform it (transformation function)
         for(int j=0;j<observations.size;j++) {
             transformed_observations[j] = transformation(observations[j], particles[i]);
         }
         
-        //TODO: perform the data association (associate the landmarks to the observations)
+        // perform the data association (associate the landmarks to the observations)
         dataAssociation(mapLandmark, observations);
         
         particles[i].weight = 1.0;
