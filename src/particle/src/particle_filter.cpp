@@ -109,11 +109,11 @@ double euclideanDistance(LandmarkObs observation, LandmarkObs map) {
 */
 void ParticleFilter::dataAssociation(std::vector<LandmarkObs> mapLandmark, std::vector<LandmarkObs>& observations) {
    //TIP: Assign to observations[i].id the id of the landmark with the smallest euclidean distance
-    for(size_t i=0;i<observations.size(),i++) {
+    for(size_t i=0;i<observations.size();i++) {
         int closet_point_id = -1;
         double min_dist = std::numeric_limits<double>::max();
 
-        for(size_t j=0;j<mapLandmark.size(),j++) {
+        for(size_t j=0;j<mapLandmark.size();j++) {
             double distance = euclideanDistance(observations[i], mapLandmark[j]);
 
             if (distance < min_dist) {
@@ -123,7 +123,7 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> mapLandmark, std::
         }
 
         // Associate the closest landmark to the observation
-        observations[i].id = closet_point_id;
+        observations[i].id = mapLandmark[closet_point_id].id;
     }
 }
 
