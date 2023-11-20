@@ -219,7 +219,7 @@ void ParticleFilter::resample() {
  * @warning The function directly modifies the global vector of particles. After calling
  * this function, the particles vector is updated with the resampled set.
  */
-void resamplingWheel() {
+void ParticleFilter::resamplingWheel() {
     uniform_int_distribution<int> dist_distribution(0,num_particles-1);
     double beta  = 0.0;
     vector<double> weights;

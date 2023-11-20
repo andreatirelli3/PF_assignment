@@ -101,6 +101,8 @@ public:
 	 */
 	void resample();
 
+	void resamplingWheel();
+
 	/*
 	 * Set a particles list of associations, along with the associations calculated world x,y coordinates
 	 * This can be a very useful debugging tool to make sure transformations are correct and assocations correctly connected
