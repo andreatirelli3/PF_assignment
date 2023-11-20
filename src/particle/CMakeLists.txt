@@ -16,6 +16,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(PCL 1.2 REQUIRED)
 find_package(Ceres REQUIRED)
+find_package(OpenMP)
+
 
 
 ## System dependencies are found with CMake's conventions
@@ -124,6 +126,7 @@ include_directories(
  include
   ${catkin_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
+  ${CERES_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -152,10 +155,11 @@ include_directories(
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(${PROJECT_NAME}_node
+ target_link_libraries(${PROJECT_NAME}_node PUBLIC
    ${catkin_LIBRARIES}
    ${PCL_LIBRARIES}
-    Ceres::ceres gflags
+   ${CERES_LIBRARIES}
+   #Ceres::ceres gflag
  )
 
 #############
