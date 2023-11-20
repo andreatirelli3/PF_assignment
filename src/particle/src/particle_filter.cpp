@@ -57,21 +57,21 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
     for(auto &particle : particles) {
         double x,y,theta;
         if (fabs(yaw_rate) < 0.00001) {
-            x = particle.x + velocity + cos(particle.theta);
-            y = particle.y + velocity + sin(particle.theta);
+            x = particle.x + velocity * delta_t * cos(particle.theta);
+            y = particle.y + velocity * delta_t * sin(particle.theta);
             theta = particle.theta
         }else{ 
-            x = particle.x + (velocity / particle.theta) * (sin(particle.theta + velocity) - sin(particle.theta));
-            y = particle.y + (velocity / yaw_rate) * (cos(particle.theta) - cos(particle.theta + velocity));
-            theta = particle.theta + velocity;
+            x = particle.x + (velocity / yaw_rate) * (sin(particle.theta + yaw_rate * delta_t) - sin(particle.theta));
+            y = particle.y + (velocity / yaw_rate) * (cos(particle.theta) - cos(particle.theta + yaw_rate * delta_t));
+            theta = particle.theta + yaw_rate * delta_t;
         }   
         normal_distribution<double> dist_x(0, std_pos[0]); //the random noise cannot be negative in this case
         normal_distribution<double> dist_y(0, std_pos[1]);
         normal_distribution<double> dist_theta(0, std_pos[2]);
         // add the computed noise to the current particles position (x,y,theta)
-        particle.x = x + dist_x;
-        particle.y = y + dist_y;
-        particle.theta = theta + dist_theta;
+        particle.x = x + dist_x(gen);
+        particle.y = y + dist_y(gen);
+        particle.theta = theta + dist_theta(gen);
     }
 }
 
