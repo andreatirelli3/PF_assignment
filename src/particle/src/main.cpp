@@ -10,11 +10,13 @@
 #include "Renderer.hpp"
 #include <pcl/filters/voxel_grid.h>
 #include <particle/helper_cloud.h>
+
+#include <omp.h>
 /*
 * TODO
 * Define the proper number of particles
 */
-#define NPARTICLES 0
+#define NPARTICLES 20000
 #define circleID "circle_id"
 #define reflectorID "reflector_id"
 
@@ -212,12 +214,16 @@ int main(int argc,char **argv)
     //pf.init_random(sigma_init,NPARTICLES);
 
     // Render all the particles
+    #pragma omp parallel for
     for(int i=0;i<NPARTICLES;i++){
         pcl::PointXYZ point;
         point.x = pf.particles[i].x;
         point.y = pf.particles[i].y;
         point.z = 0;
-        cloud_particles->push_back(point);
+        #pragma omp critical
+        {
+            cloud_particles->push_back(point);
+        } 
     }   
     renderer.RenderPointCloud(cloud_particles,"particles",colors[0]);
 
