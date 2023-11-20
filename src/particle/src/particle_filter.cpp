@@ -168,8 +168,8 @@ void ParticleFilter::updateWeights(double std_landmark[],
         // Before applying the association we have to transform the observations in the global coordinates
         std::vector<LandmarkObs> transformed_observations;
         // for each observation transform it (transformation function)
-        for(int j=0;j<observations.size;j++) {
-            transformed_observations[j] = transformation(observations[j], particles[i]);
+        for(int j=0;j<observations.size();j++) {
+            transformed_observations.push_back(transformation(observations[j], particles[i]));
         }
         
         // perform the data association (associate the landmarks to the observations)
