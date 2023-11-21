@@ -73,7 +73,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
         if (fabs(yaw_rate) < 0.00001) {
             x = particle.x + velocity * delta_t * cos(particle.theta);
             y = particle.y + velocity * delta_t * sin(particle.theta);
-            theta = particle.theta
+            theta = particle.theta;
         }else{ 
             x = particle.x + (velocity / yaw_rate) * (sin(particle.theta + yaw_rate * delta_t) - sin(particle.theta));
             y = particle.y + (velocity / yaw_rate) * (cos(particle.theta) - cos(particle.theta + yaw_rate * delta_t));
@@ -154,7 +154,7 @@ LandmarkObs transformation(LandmarkObs observation, Particle p){
     
     global.id = observation.id;
     global.x = observation.x * cos(p.theta) - observation.y * sin(p.theta) + p.x;
-    global.y = observation.y * cos(p.theta) - observation.x * sin(p.theta) + p.y;
+    global.y = observation.x * sin(p.theta) + observation.y * cos(p.theta) + p.y;
 
     return global;
 }
@@ -187,8 +187,6 @@ void ParticleFilter::updateWeights(double std_landmark[],
         }
         
         // perform the data association (associate the landmarks to the observations)
-        // dataAssociation(mapLandmark, observations);
-        // TODO: try this.
         dataAssociation(mapLandmark, transformed_observations);
 
         particles[i].weight = 1.0;
