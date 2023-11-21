@@ -22,8 +22,9 @@ double sigma_landmark [2] = {0.3, 0.3};     //[x,y] sensor measurement noise. Tr
 
 ## Problema con i Landmark
 Un primo problema riscontrato nella simulazione è nei Landmark. Infatti nel corso della simulazione, ad un particolare instante di tempo, all'incirca il 45esimo, sembra che viene associata una osservazione ad un landmark non presente nella mappa. Ricollegandomi a quanto detto in classe, ho dedotto che questo errora sia provocato dalla televisione presente nel garage che ha le proprietà di riflettere i raggi emessi dal sensore, simili ai landmark posizionati nel garage.
-![alt text](assets/tv.png "Fake Landmark")
 (Notare il puntino bianco nella particella blu di conrtorno della mappa.)
+![alt text](assets/tv.png "Fake Landmark")
+
 
 ## Proposte di ottimizzazione del codice
 Ho notato che alcuni loop possono essere paralelizzati. In particolare tutti i loop che implicano lo scorrimento delle particelle per essere aggiornate o renderizzate nel render. Un esempio proposto:
