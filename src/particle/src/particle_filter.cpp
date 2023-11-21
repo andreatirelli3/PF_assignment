@@ -244,5 +244,5 @@ void ParticleFilter::resamplingWheel() {
     }
 
     // Update the global particles vector with the resampled set
-    particles = new_particles;
+    particles.swap(new_particles);
 }
