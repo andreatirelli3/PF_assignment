@@ -187,8 +187,10 @@ void ParticleFilter::updateWeights(double std_landmark[],
         }
         
         // perform the data association (associate the landmarks to the observations)
-        dataAssociation(mapLandmark, observations);
-        
+        // dataAssociation(mapLandmark, observations);
+        // TODO: try this.
+        dataAssociation(mapLandmark, transformed_observations);
+
         particles[i].weight = 1.0;
         // Compute the probability
 		//The particles final weight can be represented as the product of each measurement’s Multivariate-Gaussian probability density
@@ -217,7 +219,7 @@ void ParticleFilter::updateWeights(double std_landmark[],
 */
 void ParticleFilter::resample() {
     // TODO add more method for resampling
-    resamplingWheel();  
+    resamplingWheel();
 }
 
 /**
@@ -249,7 +251,7 @@ void ParticleFilter::resamplingWheel() {
     // write here the resampling technique (feel free to use the above variables)
     // Resampling wheel
     for(int i=0;i<num_particles;i++) {
-        beta = beta + index * 2 * max_w;
+        beta += uni_dist(gen) * 2 * max_w;
         while(weights[index]<beta) {
             beta = beta - weights[index];
             index = (index + 1) % num_particles;
