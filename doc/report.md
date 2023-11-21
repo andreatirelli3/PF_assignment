@@ -6,7 +6,8 @@ Report sul lavoro svolto nell'assignment riguardante il Particle Filter.
 Attualmente la simulazione presenta un problema con la localizzazione del veicolo. Dalla simulazione quello che noto è che perdo la localizzazione del veicolo ad un instante preciso, (45esimo), quando viene introdotto un nuovo landmark alla mappa. Nei prossimi giorni proveró a fixxare questo problema così da avere una implementazione di PF funzionante, anche se non vale piú per l'assignment ma per scopo didattico.
 
 21/11/2023 - 00:09
-Trovata una possibile soluzione per ovviare il problema del falso landmark, aggiornata la nuova configurazione migliore
+Trovata una possibile soluzione per ovviare il problema del falso landmark, aggiornata la nuova configurazione migliore.
+![alt text](assets/bestone.png "Best PF implementation")
 
 ### Configuraione migliore ottenuta
 Di seguito indico la migliore configuraione che ho usato per le varie simulazioni per ottenere il risultato migliore.
@@ -21,6 +22,8 @@ double sigma_landmark [2] = {0.3, 0.3};     //[x,y] sensor measurement noise. Tr
 
 ## Problema con i Landmark
 Un primo problema riscontrato nella simulazione è nei Landmark. Infatti nel corso della simulazione, ad un particolare instante di tempo, all'incirca il 45esimo, sembra che viene associata una osservazione ad un landmark non presente nella mappa. Ricollegandomi a quanto detto in classe, ho dedotto che questo errora sia provocato dalla televisione presente nel garage che ha le proprietà di riflettere i raggi emessi dal sensore, simili ai landmark posizionati nel garage.
+![alt text](assets/tv.png "Fake Landmark")
+(Notare il puntino bianco nella particella blu di conrtorno della mappa.)
 
 ## Proposte di ottimizzazione del codice
 Ho notato che alcuni loop possono essere paralelizzati. In particolare tutti i loop che implicano lo scorrimento delle particelle per essere aggiornate o renderizzate nel render. Un esempio proposto:
