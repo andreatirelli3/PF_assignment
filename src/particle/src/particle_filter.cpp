@@ -20,6 +20,20 @@ static  default_random_engine gen;
 *  nParticles - number of particles
 */
 void ParticleFilter::init_random(double std[],int nParticles) {
+    num_particles = nParticles;
+    normal_distribution<double> dist_x(-std[0], std[0]); //random value between [-noise.x,+noise.x]
+    normal_distribution<double> dist_y(-std[1], std[1]);
+    normal_distribution<double> dist_theta(-std[2], std[2]);
+
+    for(int i=0;i<num_particles;i++){
+        Particle p;
+        p.id = i;
+        // Make random x and y
+        p.weight = 1;
+        particles.push_back(p);
+    }
+
+    is_initialized = true;
 }
 
 // This function initialize the particles using an initial guess
